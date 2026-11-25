@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+
 from dotenv import load_dotenv
 
 # Load environment variables (API keys)
@@ -198,7 +199,7 @@ def run_react_agent(query: str):
                     # Execute tool
                     observation = tool_func(*tool_args)
                 except Exception as e:
-                    observation = f"Error executing tool: {str(e)}"
+                    observation = f"Error executing tool: {e!s}"
             else:
                 observation = f"Error: Tool '{tool_name}' is not in the tool registry."
                 

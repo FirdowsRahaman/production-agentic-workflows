@@ -2,6 +2,7 @@ import os
 import re
 import subprocess
 import sys
+
 from dotenv import load_dotenv
 
 # Load API keys
@@ -18,6 +19,7 @@ def execute_python_in_sandbox(filename: str) -> str:
         # Run script with a timeout (e.g. 5 seconds) to prevent infinite loops
         result = subprocess.run(
             [sys.executable, filename],
+            check=False,
             capture_output=True,
             text=True,
             timeout=5
@@ -35,7 +37,7 @@ def execute_python_in_sandbox(filename: str) -> str:
         print("[Sandbox] Script timed out.")
         return "Failure! Execution timed out after 5 seconds."
     except Exception as e:
-        return f"Error executing sandbox: {str(e)}"
+        return f"Error executing sandbox: {e!s}"
 
 # =====================================================================
 # 2. File Writing Tool
@@ -53,7 +55,7 @@ def write_code_file(filename: str, code: str) -> str:
             f.write(code)
         return f"File '{base_name}' written successfully."
     except Exception as e:
-        return f"Error writing file: {str(e)}"
+        return f"Error writing file: {e!s}"
 
 # =====================================================================
 # 3. Autonomous Developer Agent Loop
@@ -61,7 +63,7 @@ def write_code_file(filename: str, code: str) -> str:
 
 def run_developer_agent(task_description: str):
     print("=" * 70)
-    print(f"Initializing Autonomous Sandbox Developer Agent...")
+    print("Initializing Autonomous Sandbox Developer Agent...")
     print(f"Task: '{task_description}'")
     print("=" * 70)
     
@@ -141,7 +143,7 @@ Final Answer: Summarize your solution and present the final output details.
                 )
                 response_text = response.text
             except Exception as e:
-                response_text = f"Error calling model: {str(e)}"
+                response_text = f"Error calling model: {e!s}"
 
         print(response_text)
         history += f"\n{response_text}\n"

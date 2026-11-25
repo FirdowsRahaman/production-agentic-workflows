@@ -1,6 +1,6 @@
-import os
 import sys
 from typing import TypedDict
+
 from dotenv import load_dotenv
 
 # Load API keys

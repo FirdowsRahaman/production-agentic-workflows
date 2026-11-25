@@ -2,9 +2,10 @@
 Demonstrates GDPR-compliant data residency, Mistral function calling, and fallback routing.
 """
 
-import os
 import json
-from typing import Dict, Any, List, Optional
+import os
+from typing import Any
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -49,13 +50,13 @@ class SovereignMistralClient:
     Prioritizes local on-premise vLLM running in Frankfurt (eu-central-1),
     falling back to Mistral AI Paris cloud endpoints.
     """
-    def __init__(self, api_key: Optional[str] = None, vllm_url: Optional[str] = None):
+    def __init__(self, api_key: str | None = None, vllm_url: str | None = None):
         self.api_key = api_key or os.getenv("MISTRAL_API_KEY", "")
         self.vllm_url = vllm_url or os.getenv("SOVEREIGN_VLLM_URL", "")
         self.active_endpoint = "vLLM-Frankfurt" if self.vllm_url else "Mistral-Paris"
         print(f"Initialized Sovereign LLM Client: Active Gateway = {self.active_endpoint}")
 
-    def generate(self, prompt: str, tools: Optional[List[Dict[str, Any]]] = None) -> Dict[str, Any]:
+    def generate(self, prompt: str, tools: list[dict[str, Any]] | None = None) -> dict[str, Any]:
         """Simulates structured function calling inference adhering to Mistral format."""
         # For demonstration purposes, mock the deterministic response
         prompt_lower = prompt.lower()
@@ -87,7 +88,7 @@ class SovereignMistralClient:
 
 def run_sovereign_agent(query: str):
     print("\n" + "="*70)
-    print(f"Sovereign Mistral Agent: Received Query")
+    print("Sovereign Mistral Agent: Received Query")
     print(f"Query: '{query}'")
     print("="*70)
 
@@ -107,7 +108,7 @@ def run_sovereign_agent(query: str):
         if tool_name in TOOL_REGISTRY:
             tool_output = TOOL_REGISTRY[tool_name](**tool_args)
             print(f"Output: {tool_output}")
-            print(f"\n [Final Answer]: Processed via European sovereign endpoint with zero data egress.")
+            print("\n [Final Answer]: Processed via European sovereign endpoint with zero data egress.")
         else:
             print(f"Error: Tool {tool_name} not registered.")
     else:

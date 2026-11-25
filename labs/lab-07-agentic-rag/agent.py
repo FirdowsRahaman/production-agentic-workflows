@@ -1,7 +1,7 @@
-import os
-import sys
 import math
-from typing import TypedDict, Optional
+import os
+from typing import TypedDict
+
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -94,7 +94,7 @@ class InMemoryVectorStore:
 
     def _keyword_similarity(self, query: str, doc_text: str) -> float:
         """Fallback keyword overlap score when no API key is available."""
-        stopwords = {"what", "is", "and", "the", "a", "to", "in", "for", "with", "of", "an", "that", "it", "on", "are", "do", "you", "your", "this", "does", "what"}
+        stopwords = {"what", "is", "and", "the", "a", "to", "in", "for", "with", "of", "an", "that", "it", "on", "are", "do", "you", "your", "this", "does"}
         
         # Clean punctuation
         q_clean = "".join([c for c in query.lower() if c.isalnum() or c.isspace()])
@@ -305,7 +305,7 @@ Answer:"""
         )
         return {"answer": response.text.strip()}
     except Exception as e:
-        return {"answer": f"Error generating grounded response: {str(e)}"}
+        return {"answer": f"Error generating grounded response: {e!s}"}
 
 # =====================================================================
 # 4. Conditional Edges

@@ -1,6 +1,7 @@
 import os
 import sys
 from typing import TypedDict
+
 from dotenv import load_dotenv
 
 # Load API keys
@@ -93,7 +94,7 @@ Report:"""
         )
         return {"proposed_diagnosis": response.text, "status": "pending_doctor_approval"}
     except Exception as e:
-        return {"proposed_diagnosis": f"Error generating diagnosis: {str(e)}", "status": "failed"}
+        return {"proposed_diagnosis": f"Error generating diagnosis: {e!s}", "status": "failed"}
 
 # =====================================================================
 # 4. Human-in-the-Loop Safeguard

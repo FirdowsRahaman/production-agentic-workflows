@@ -1,8 +1,8 @@
 import os
 import sys
-from typing import Annotated, Sequence, TypedDict
+from typing import TypedDict
+
 from dotenv import load_dotenv
-from pydantic import BaseModel, Field
 
 # Load API keys
 load_dotenv()
@@ -105,7 +105,7 @@ def call_model_node(state: AgentState) -> dict:
         return {"messages": [ai_message]}
     except Exception as e:
         # Fallback error message
-        return {"messages": [{"role": "assistant", "content": f"Error calling live LLM: {str(e)}", "tool_calls": []}]}
+        return {"messages": [{"role": "assistant", "content": f"Error calling live LLM: {e!s}", "tool_calls": []}]}
 
 def execute_tools_node(state: AgentState) -> dict:
     """The action node: executes any pending tool calls."""

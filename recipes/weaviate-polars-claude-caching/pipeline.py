@@ -9,13 +9,12 @@ Title: AI/ML Lead & Enterprise Architect
 License: MIT
 """
 
+import hashlib
 import os
 import sys
 import time
-import json
-import hashlib
-from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
+from typing import Any
 
 try:
     import polars as pl
@@ -26,8 +25,6 @@ except ImportError:
 # Optional rich console formatting
 try:
     from rich.console import Console
-    from rich.table import Table
-    from rich.panel import Panel
     console = Console()
 except ImportError:
     console = None
@@ -128,12 +125,12 @@ class WeaviateVectorMemory:
     Includes an in-process fallback engine if an external Weaviate cluster is unavailable.
     """
 
-    def __init__(self, cluster_url: Optional[str] = None, api_key: Optional[str] = None):
+    def __init__(self, cluster_url: str | None = None, api_key: str | None = None):
         self.cluster_url = cluster_url or os.getenv("WEAVIATE_URL")
         self.api_key = api_key or os.getenv("WEAVIATE_API_KEY")
         self.client = None
         self.collection_name = "EnterprisePolicyChunk"
-        self._fallback_store: List[Dict[str, Any]] = []
+        self._fallback_store: list[dict[str, Any]] = []
 
         self._initialize_connection()
 
@@ -201,7 +198,7 @@ class WeaviateVectorMemory:
         # Fallback in-process storage
         self._fallback_store = df.to_dicts()
 
-    def hybrid_search(self, query: str, limit: int = 3, alpha: float = 0.5) -> List[RetrievedChunk]:
+    def hybrid_search(self, query: str, limit: int = 3, alpha: float = 0.5) -> list[RetrievedChunk]:
         """Performs hybrid vector search (dense semantic similarity + sparse BM25).
         alpha = 0.0 (Pure BM25 keyword) -> alpha = 1.0 (Pure Vector cosine). Default = 0.5 (Balanced).
         """
@@ -264,7 +261,7 @@ class ClaudeContextCachedAgent:
     and preprocessed knowledge corpora in Anthropic KV memory (5-minute rolling TTL).
     """
 
-    def __init__(self, api_key: Optional[str] = None, model: str = "claude-3-5-sonnet-20241022"):
+    def __init__(self, api_key: str | None = None, model: str = "claude-3-5-sonnet-20241022"):
         self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
         self.model = model
         self.client = None
@@ -279,7 +276,7 @@ class ClaudeContextCachedAgent:
         else:
             self.client = None
 
-    def query(self, user_question: str, cached_system_corpus: str, retrieved_context: List[RetrievedChunk]) -> Dict[str, Any]:
+    def query(self, user_question: str, cached_system_corpus: str, retrieved_context: list[RetrievedChunk]) -> dict[str, Any]:
         """Executes a prompt-cached inference turn against Anthropic Claude.
         Tracks cache hits, cache writes, latency, and cost reduction.
         """
@@ -441,7 +438,7 @@ def run_enterprise_pipeline():
 
     # Step 4: Claude Context Caching Inference (Turn 2: Cache Hit)
     follow_up_query = "How does GDPR Article 17 right to erasure apply to vector stores and embeddings?"
-    print(f"\n[4/4] Executing Turn 2 (Follow-up Turn / Cache Hit Verification)...")
+    print("\n[4/4] Executing Turn 2 (Follow-up Turn / Cache Hit Verification)...")
     retrieved_chunks_2 = weaviate_store.hybrid_search(follow_up_query, limit=2)
     turn_2 = agent.query(follow_up_query, cached_corpus, retrieved_chunks_2)
     print(f"Status:       {turn_2['cache_status']}")
@@ -451,7 +448,6 @@ def run_enterprise_pipeline():
 
     # Economics & Telemetry Report
     base_cost_per_mtok = 3.00       # Claude 3.5 Sonnet regular input per 1M tokens
-    cache_write_cost_per_mtok = 3.75 # Cache write (1.25x)
     cache_read_cost_per_mtok = 0.30  # Cache read (0.1x -> 90% discount)
 
     uncached_turn2_cost = (corpus_tokens / 1_000_000) * base_cost_per_mtok

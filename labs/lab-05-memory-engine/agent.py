@@ -1,6 +1,6 @@
 import os
-import sys
 from typing import TypedDict
+
 from dotenv import load_dotenv
 
 # Load API keys
@@ -125,12 +125,12 @@ You have access to the following long-term facts about the user:
             )
             response_text = response.text
         except Exception as e:
-            response_text = f"Error calling model: {str(e)}"
+            response_text = f"Error calling model: {e!s}"
     else:
         # Mock LLM response demonstrating that retrieved memories are utilized
         print("ℹ Running in Mock Mode...")
         if state["retrieved_memories"]:
-            response_text = f"Hello! Since you are in San Francisco and prefer Python, I recommend using FastAPI for your project."
+            response_text = "Hello! Since you are in San Francisco and prefer Python, I recommend using FastAPI for your project."
         else:
             response_text = "Hello! Tell me about where you live or what programming languages you like."
             

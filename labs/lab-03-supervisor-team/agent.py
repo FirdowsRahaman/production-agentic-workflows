@@ -1,6 +1,7 @@
 import os
 import sys
 from typing import TypedDict
+
 from dotenv import load_dotenv
 
 # Load API keys
@@ -95,7 +96,7 @@ Your job is to solve this user task: "{task}"Here is what the team has done so f
             return {"next_step": "compile_report"}
             
     except Exception as e:
-        print(f"Error calling supervisor model ({str(e)}). Using local rule engine.")
+        print(f"Error calling supervisor model ({e!s}). Using local rule engine.")
         # Fallback to local rule logic
         if not research: return {"next_step": "researcher"}
         elif not code: return {"next_step": "coder"}

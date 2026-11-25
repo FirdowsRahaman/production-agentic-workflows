@@ -1,5 +1,6 @@
 import os
 import sys
+
 from dotenv import load_dotenv
 
 # Load API keys
@@ -120,7 +121,6 @@ def run_evaluation_suite():
         
         # 2. Evaluate tool routing accuracy (deterministic assertion)
         tool_matches = agent_out["selected_tool"] == case["expected_tool"]
-        tool_score = 1.0 if tool_matches else 0.0
         
         # 3. Evaluate answer accuracy using LLM-as-a-judge
         judge_score = run_llm_judge(

@@ -1,6 +1,7 @@
 import os
 import sys
 from typing import TypedDict
+
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 
@@ -91,7 +92,7 @@ Analyze this corporate report for compliance violations:
         audit = ComplianceSchema.model_validate_json(response.text)
         return {"audit_data": audit, "status": "audit_complete"}
     except Exception as e:
-        print(f"Error during structured model run: {str(e)}")
+        print(f"Error during structured model run: {e!s}")
         # Local fallback
         audit = ComplianceSchema(
             compliance_score=95.0,
@@ -123,7 +124,7 @@ def run_compliance_pipeline(report_text: str):
     state.update(updates)
     
     audit = state["audit_data"]
-    print(f"\n Audit Results Compiled:")
+    print("\n Audit Results Compiled:")
     print(f"   - Compliance Score: {audit.compliance_score:.1f}%")
     print(f"   - Violations:       {audit.violated_clauses}")
     print(f"   - Recommended Fixes: {audit.recommended_fixes}")

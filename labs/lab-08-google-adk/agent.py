@@ -1,5 +1,6 @@
 import os
 import sys
+
 from dotenv import load_dotenv
 
 # Load API keys
@@ -36,8 +37,7 @@ def competitor_web_search(query: str) -> str:
 adk_imported = False
 try:
     # Try importing the Google ADK packages
-    from google import adk
-    from google.adk import Agent, Workflow, Runner
+    from google.adk import Agent, Runner, Workflow
     adk_imported = True
 except ImportError:
     pass
@@ -106,7 +106,7 @@ def run_simulated_adk(topic: str):
     print("   - Registered Agent: 'writer_agent' (model: gemini-2.5-flash)")
     print("   - Registered Workflow: 'sequential_writing_team'")
     print("=" * 80)
-    print(f"[ADK Workflow Start] Executing workflow: 'sequential_writing_team'")
+    print("[ADK Workflow Start] Executing workflow: 'sequential_writing_team'")
     print(f"Input: 'Research topic: {topic}'")
     print("=" * 80)
     

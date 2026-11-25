@@ -1,6 +1,7 @@
 import os
 import sys
 from typing import TypedDict
+
 from dotenv import load_dotenv
 
 # Load API keys
@@ -85,7 +86,7 @@ Report:"""
         )
         return response.text
     except Exception as e:
-        return f"Error compiling report: {str(e)}"
+        return f"Error compiling report: {e!s}"
 
 # =====================================================================
 # 4. Core Pipeline
